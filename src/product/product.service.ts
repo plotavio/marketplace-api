@@ -21,6 +21,10 @@ export class ProductService {
     
   }
 
+  async findByname(name: string): Promise<Product | undefined> {
+    return this.productRepository.findOne({ name }); 
+}
+
   async create(data: ProductCreateDto): Promise <ResultDto>{
     let product = new Product()
       product.name = data.name

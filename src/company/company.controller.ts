@@ -6,10 +6,13 @@ import { CompanyCreateDto } from './dto/company.create.dto';
 import { ResultDto } from '../dto/result.dto';
 import { CompanyUpdateDto } from './dto/company.update.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('company')
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(private readonly companyService: CompanyService,
+    private authService: AuthService) {}
 
   @Get('list')
   async list(): Promise<Company[]>{
@@ -24,9 +27,9 @@ export class CompanyController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req) {
-    return req.user;
+    return this.authService.login(req.user);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('list/:id')
     async findOne(@Param('id') id: number) {
     return this.companyService.getById(id);

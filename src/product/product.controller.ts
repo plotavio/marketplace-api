@@ -25,6 +25,11 @@ export class ProductController {
     return this.productService.getById(id);
    }
 
+   @Get('search/:name')
+   async findByName(@Param('name') name: string) {
+   return this.productService.findByname(name);
+  }
+
    @Put(':id')
    async update(@Param('id') id: number, @Body() updateUserDto: ProductUpdateDto): Promise<ResultDto> {
    return this.productService.update(id, updateUserDto);
