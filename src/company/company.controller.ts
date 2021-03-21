@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, Request } from '@nestjs/common';
 import { get } from 'node:http';
 import { Company } from './company.entity';
 import { CompanyService } from './company.service';
 import { CompanyCreateDto } from './dto/company.create.dto';
 import { ResultDto } from '../dto/result.dto';
 import { CompanyUpdateDto } from './dto/company.update.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('company')
 export class CompanyController {
@@ -18,6 +19,12 @@ export class CompanyController {
   @Post('create')
   async create(@Body() data: CompanyCreateDto): Promise<ResultDto>{
       return this.companyService.create(data)
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('login')
+  async login(@Request() req) {
+    return req.user;
   }
 
   @Get('list/:id')

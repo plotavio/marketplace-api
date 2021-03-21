@@ -4,6 +4,7 @@ import { Company } from './company.entity';
 import { CompanyCreateDto } from './dto/company.create.dto';
 import { CompanyUpdateDto } from './dto/company.update.dto';
 import { ResultDto } from '../dto/result.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CompanyService {
@@ -21,6 +22,10 @@ export class CompanyService {
     
   }
 
+  async findOne(cnpj: string): Promise<Company | undefined> {
+    return this.companyRepository.findOne({cnpj: cnpj});
+  }
+
   async create(data: CompanyCreateDto): Promise <ResultDto>{
     let company = new Company()
       company.name = data.name
@@ -28,7 +33,7 @@ export class CompanyService {
       company.companyName = data.companyName
       company.adress = data.adress
       company.phone = data.phone
-      company.password = data.password
+      company.password = bcrypt.hashSync(data.password, 8)
       return this.companyRepository.save(company)
       .then((result) => {
         return <ResultDto>{

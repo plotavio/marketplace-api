@@ -11,5 +11,6 @@ import { CompanyController } from './company.controller'
     ...companyProviders,
     CompanyService,
   ],
+  exports: [CompanyService]
 })
 export class CompanyModule {}
